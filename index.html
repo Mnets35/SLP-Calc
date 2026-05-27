@@ -23,13 +23,12 @@
   .slider-container { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
   input[type=range] { -webkit-appearance: none; height: 4px; background: #e2e8f0; }
   input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; }
-  .slider-val { font-family: 'DM Mono', monospace; font-weight: 600; min-width: 110px; text-align: right; font-size: 1.1rem; }
+  .slider-val { font-family: 'DM Mono', monospace; font-weight: 600; min-width: 120px; text-align: right; font-size: 1.1rem; }
   
   .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; background: #f8fafc; padding: 1rem; border-radius: 8px; }
   .stat-box .label { font-size: 0.75rem; font-family: 'DM Mono', monospace; color: var(--text-light); text-transform: uppercase; }
   .stat-box .val { font-size: 1.1rem; font-weight: 600; color: var(--text); }
   
-  /* Upgraded Payout Split Grid Layout */
   .payout-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2rem; }
   .total-card { background: #0f172a; color: white; text-align: center; padding: 1.5rem; border-radius: 12px; }
   .total-card .label { font-size: 0.8rem; font-family: 'DM Mono', monospace; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; }
@@ -79,4 +78,56 @@
   <div class="payout-grid">
     <div class="total-card">
       <div class="label">Estimated Annual Comp</div>
-      <div class="grand-total" id="total-compensation">$
+      <div class="grand-total" id="total-compensation">$0</div>
+      <div class="subtext" id="breakdown-text">Base + Bonus</div>
+    </div>
+    <div class="total-card" style="background: #1e293b;">
+      <div class="label">Estimated Monthly Comp</div>
+      <div class="grand-total" id="monthly-compensation">$0</div>
+      <div class="subtext" id="monthly-breakdown-text">Avg Payout/Mo</div>
+    </div>
+  </div>
+
+  <div class="fine-print">
+    <p><strong>Note:</strong> Your base salary remains 100% guaranteed, absorbing cancellation variables and tracking your documentation hours safely. Bonuses apply up to the maximum weekly cap to protect clinic health.</p>
+  </div>
+</div>
+
+<script>
+  // Explicitly mapping the math keys to avoid script errors
+  const rates = { "1": 22.50, "2": 24.50, "3": 26.50 };
+
+  function calculate() {
+    const year = document.getElementById("year").value;
+    const volume = parseFloat(document.getElementById("performance-slider").value);
+    const rate = rates[year];
+    
+    // Update Slider Value String
+    document.getElementById("slider-display").textContent = volume + " sessions";
+    document.getElementById("bonus-rate-display").textContent = "$" + rate.toFixed(2) + " / session";
+    
+    // Process logic for thresholds and limits
+    let bonusUnits = volume - 20;
+    if (bonusUnits < 0) bonusUnits = 0;
+    if (bonusUnits > 35) bonusUnits = 35;
+    
+    const annualBonus = bonusUnits * rate * 48;
+    const totalAnnual = 55000 + annualBonus;
+    
+    const totalMonthly = totalAnnual / 12;
+    const baseMonthly = 55000 / 12;
+    const bonusMonthly = annualBonus / 12;
+    
+    // Safely write numbers directly to structural panels
+    document.getElementById("total-compensation").textContent = "$" + Math.round(totalAnnual).toLocaleString();
+    document.getElementById("breakdown-text").textContent = "Base: $55,000 | Bonus: $" + Math.round(annualBonus).toLocaleString();
+    
+    document.getElementById("monthly-compensation").textContent = "$" + Math.round(totalMonthly).toLocaleString();
+    document.getElementById("monthly-breakdown-text").textContent = "Base: $" + Math.round(baseMonthly).toLocaleString() + " | Bonus: $" + Math.round(bonusMonthly).toLocaleString();
+  }
+
+  // Force first initialization calculation
+  calculate();
+</script>
+</body>
+</html>
