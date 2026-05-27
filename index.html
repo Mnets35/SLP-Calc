@@ -109,7 +109,6 @@
     // Process logic for thresholds and limits
     let bonusUnits = volume - 20;
     if (bonusUnits < 0) bonusUnits = 0;
-    if (bonusUnits > 35) bonusUnits = 35;
     
     const annualBonus = bonusUnits * rate * 48;
     const totalAnnual = 55000 + annualBonus;
