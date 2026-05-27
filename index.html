@@ -46,7 +46,7 @@
 <div class="container">
   <header>
     <h1>SLP Compensation & Growth Model</h1>
-    <p>Secure Base Payout + Low-Threshold Production Multipliers</p>
+    <p>Secure Base Payout + Uncapped Production Multipliers</p>
   </header>
 
   <div class="card">
@@ -69,9 +69,9 @@
     
     <div class="stats-grid">
       <div class="stat-box"><div class="label">Guaranteed Base Salary</div><div class="val">$55,000</div></div>
-      <div class="stat-box"><div class="label">Weekly Bonus Threshold</div><div class="val">20 sessions/wk</div></div>
-      <div class="stat-box"><div class="label">Your Bonus Multiplier</div><div class="val" id="bonus-rate-display">$22.50</div></div>
-      <div class="stat-box"><div class="label">Max Weekly Bonus Cap</div><div class="val">35 sessions/wk</div></div>
+      <div class="stat-box"><div class="label">Weekly Bonus Threshold</div><div class="val">25 sessions/wk</div></div>
+      <div class="stat-box"><div class="label">Your Bonus Multiplier</div><div class="val" id="bonus-rate-display">$17.50</div></div>
+      <div class="stat-box"><div class="label">Max Weekly Bonus Cap</div><div class="val">Uncapped</div></div>
     </div>
   </div>
 
@@ -89,25 +89,24 @@
   </div>
 
   <div class="fine-print">
-    <p><strong>Note:</strong> Your base salary remains 100% guaranteed, absorbing cancellation variables and tracking your documentation hours safely. Bonuses apply up to the maximum weekly cap to protect clinic health.</p>
+    <p><strong>Note:</strong> Your base salary remains 100% guaranteed, absorbing cancellation variables and tracking your documentation hours safely. Production bonuses are entirely uncapped—the more sessions you complete, the more your income scales.</p>
   </div>
 </div>
 
 <script>
-  // Explicitly mapping the math keys to avoid script errors
-  const rates = { "1": 22.50, "2": 24.50, "3": 26.50 };
+  // Reworked low-risk scaling rates ($17.50 baseline)
+  const rates = { "1": 17.50, "2": 19.50, "3": 21.50 };
 
   function calculate() {
     const year = document.getElementById("year").value;
     const volume = parseFloat(document.getElementById("performance-slider").value);
     const rate = rates[year];
     
-    // Update Slider Value String
     document.getElementById("slider-display").textContent = volume + " sessions";
     document.getElementById("bonus-rate-display").textContent = "$" + rate.toFixed(2) + " / session";
     
-    // Process logic for thresholds and limits
-    let bonusUnits = volume - 20;
+    // Safety cap removed completely from logic
+    let bonusUnits = volume - 25;
     if (bonusUnits < 0) bonusUnits = 0;
     
     const annualBonus = bonusUnits * rate * 48;
@@ -117,7 +116,6 @@
     const baseMonthly = 55000 / 12;
     const bonusMonthly = annualBonus / 12;
     
-    // Safely write numbers directly to structural panels
     document.getElementById("total-compensation").textContent = "$" + Math.round(totalAnnual).toLocaleString();
     document.getElementById("breakdown-text").textContent = "Base: $55,000 | Bonus: $" + Math.round(annualBonus).toLocaleString();
     
@@ -125,7 +123,6 @@
     document.getElementById("monthly-breakdown-text").textContent = "Base: $" + Math.round(baseMonthly).toLocaleString() + " | Bonus: $" + Math.round(bonusMonthly).toLocaleString();
   }
 
-  // Force first initialization calculation
   calculate();
 </script>
 </body>
