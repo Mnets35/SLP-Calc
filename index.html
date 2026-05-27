@@ -24,14 +24,23 @@
   input[type=range] { -webkit-appearance: none; height: 4px; background: #e2e8f0; }
   input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; }
   .slider-val { font-family: 'DM Mono', monospace; font-weight: 600; min-width: 110px; text-align: right; font-size: 1.1rem; }
+  
   .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; background: #f8fafc; padding: 1rem; border-radius: 8px; }
   .stat-box .label { font-size: 0.75rem; font-family: 'DM Mono', monospace; color: var(--text-light); text-transform: uppercase; }
   .stat-box .val { font-size: 1.1rem; font-weight: 600; color: var(--text); }
-  .total-card { background: #0f172a; color: white; text-align: center; padding: 2rem; border-radius: 12px; margin-top: 2rem; }
-  .total-card .label { font-size: 0.85rem; font-family: 'DM Mono', monospace; text-transform: uppercase; color: #94a3b8; }
-  .total-card .grand-total { font-size: 3rem; font-weight: 700; color: #f8fafc; margin: 0.5rem 0; }
-  .total-card .subtext { font-size: 0.9rem; color: #38bdf8; font-family: 'DM Mono', monospace; }
+  
+  /* Upgraded Payout Split Grid Layout */
+  .payout-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2rem; }
+  .total-card { background: #0f172a; color: white; text-align: center; padding: 1.5rem; border-radius: 12px; }
+  .total-card .label { font-size: 0.8rem; font-family: 'DM Mono', monospace; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; }
+  .total-card .grand-total { font-size: 2.2rem; font-weight: 700; color: #f8fafc; margin: 0.25rem 0; }
+  .total-card .subtext { font-size: 0.8rem; color: #38bdf8; font-family: 'DM Mono', monospace; }
+  
   .fine-print { margin-top: 2rem; padding: 1rem; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: var(--text-light); }
+  
+  @media (max-width: 550px) {
+    .payout-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -55,7 +64,7 @@
     <div class="section-title">Step 2: Anticipated Weekly Performance</div>
     <label for="performance-slider">Weekly Completed Sessions</label>
     <div class="slider-container">
-      <input type="range" id="performance-slider" min="0" max="60" value="50" oninput="calculate()">
+      <input type="range" id="performance-slider" min="0" max="80" value="50" oninput="calculate()">
       <span class="slider-val" id="slider-display">50 sessions</span>
     </div>
     
@@ -67,37 +76,7 @@
     </div>
   </div>
 
-  <div class="total-card">
-    <div class="label">Estimated Annual Total Compensation</div>
-    <div class="grand-total" id="total-compensation">$0</div>
-    <div class="subtext" id="breakdown-text">Base: $55,000 | Estimated Annual Bonus: $0</div>
-  </div>
-
-  <div class="fine-print">
-    <p><strong>Note:</strong> Your base salary remains 100% guaranteed, absorbing cancellation variables and tracking your documentation hours safely. Bonuses apply up to the maximum weekly cap to protect clinic health.</p>
-  </div>
-</div>
-<script>
-  const rates = { 1: 22.50, 2: 24.50, 3: 26.50 };
-  function calculate() {
-    const year = document.getElementById("year").value;
-    const volume = parseFloat(document.getElementById("performance-slider").value);
-    const rate = rates[year];
-    
-    document.getElementById("slider-display").textContent = volume + " sessions";
-    document.getElementById("bonus-rate-display").textContent = "$" + rate.toFixed(2) + " / session";
-    
-    let bonusUnits = volume - 20;
-    if (bonusUnits < 0) bonusUnits = 0;
-    if (bonusUnits > 35) bonusUnits = 35;
-    
-    const annualBonus = bonusUnits * rate * 48;
-    const total = 55000 + annualBonus;
-    
-    document.getElementById("total-compensation").textContent = "$" + Math.round(total).toLocaleString();
-    document.getElementById("breakdown-text").textContent = "Guaranteed Base: $55,000 | Annual Bonus Upside: $" + Math.round(annualBonus).toLocaleString();
-  }
-  calculate();
-</script>
-</body>
-</html>
+  <div class="payout-grid">
+    <div class="total-card">
+      <div class="label">Estimated Annual Comp</div>
+      <div class="grand-total" id="total-compensation">$
