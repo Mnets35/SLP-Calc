@@ -3,75 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLP Compensation</title>
+<title>SLP Compensation & Category Overview</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f4f6f8; --surface: #ffffff; --border: rgba(0,0,0,0.08);
-    --text: #1e293b; --text-light: #64748b; --accent: #2563eb;
+    --bg: #f4f6f8; 
+    --surface: #ffffff; 
+    --border: rgba(0,0,0,0.08);
+    --text: #1e293b; 
+    --text-light: #64748b; 
+    --accent: #f15233;       /* Active Tab & Slider Orange/Red */
+    --gold: #f9bb1e;         /* Subtext Accent */
+    --brand-dark: #414141;   /* Brand Charcoal Dark Header & Cards */
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); padding: 2rem 1rem; line-height: 1.5; }
-  .container { max-width: 700px; margin: 0 auto; }
-  header { text-align: center; margin-bottom: 2rem; background: #0f172a; color: white; padding: 2rem; border-radius: 12px; }
-  header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.5rem; }
-  header p { color: #94a3b8; font-size: 0.95rem; }
+  .container { max-width: 800px; margin: 0 auto; }
+  
+  header { text-align: center; margin-bottom: 2rem; background: var(--brand-dark); color: white; padding: 2rem; border-radius: 12px; }
+  header .logo-img { max-width: 280px; width: 100%; height: auto; margin-bottom: 0.75rem; display: inline-block; }
+  header p { color: #cbd5e1; font-size: 0.95rem; }
+  
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
   .section-title { font-size: 0.85rem; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); margin-bottom: 1rem; }
+  
+  /* Category Selector Tabs - 4 Columns for SLP */
+  .category-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+  .tab-btn { background: #e2e8f0; border: none; padding: 0.8rem 0.4rem; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.8rem; color: #475569; cursor: pointer; transition: all 0.2s ease; text-align: center; }
+  .tab-btn.active { background: var(--accent); color: white; box-shadow: 0 2px 4px rgba(241, 82, 51, 0.3); }
+  
+  /* Slider Controls */
   label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 0.5rem; }
-  select, input[type=range] { width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; font-size: 0.95rem; outline: none; }
   .slider-container { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
-  input[type=range] { -webkit-appearance: none; height: 4px; background: #e2e8f0; }
+  input[type=range] { width: 100%; -webkit-appearance: none; height: 6px; background: #e2e8f0; border-radius: 3px; outline: none; }
   input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; }
   .slider-val { font-family: 'DM Mono', monospace; font-weight: 600; min-width: 120px; text-align: right; font-size: 1.1rem; }
   
-  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; background: #f8fafc; padding: 1rem; border-radius: 8px; }
-  .stat-box .label { font-size: 0.75rem; font-family: 'DM Mono', monospace; color: var(--text-light); text-transform: uppercase; }
-  .stat-box .val { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+  /* Stat Grid - 3 Columns */
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; background: #f8fafc; padding: 1rem; border-radius: 8px; }
+  .stat-box .label { font-size: 0.72rem; font-family: 'DM Mono', monospace; color: var(--text-light); text-transform: uppercase; }
+  .stat-box .val { font-size: 1.05rem; font-weight: 600; color: var(--text); }
   
-  .payout-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2rem; }
-  .total-card { background: #0f172a; color: white; text-align: center; padding: 1.5rem; border-radius: 12px; }
+  /* Payout Cards */
+  .payout-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.5rem; }
+  .total-card { background: var(--brand-dark); color: white; text-align: center; padding: 1.5rem; border-radius: 12px; }
   .total-card .label { font-size: 0.8rem; font-family: 'DM Mono', monospace; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; }
-  .total-card .grand-total { font-size: 2.2rem; font-weight: 700; color: #f8fafc; margin: 0.25rem 0; }
-  .total-card .subtext { font-size: 0.8rem; color: #38bdf8; font-family: 'DM Mono', monospace; }
+  .total-card .grand-total { font-size: 2.1rem; font-weight: 700; color: #f8fafc; margin: 0.25rem 0; }
+  .total-card .subtext { font-size: 0.75rem; color: var(--gold); font-family: 'DM Mono', monospace; }
+  
+  /* Total Compensation Package Card */
+  .package-card { background: var(--brand-dark); color: white; text-align: center; padding: 1.5rem; border-radius: 12px; margin-top: 1rem; border: 2px solid var(--accent); }
+  .package-card .label { font-size: 0.85rem; font-family: 'DM Mono', monospace; text-transform: uppercase; color: #f8fafc; letter-spacing: 0.05em; font-weight: 600; }
+  .package-card .package-total { font-size: 2.5rem; font-weight: 800; color: #f9bb1e; margin: 0.25rem 0; }
+  .package-card .subtext { font-size: 0.8rem; color: #cbd5e1; line-height: 1.4; }
+
+  /* Dynamic Information Sections */
+  .info-box { border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; line-height: 1.6; font-size: 0.9rem; }
+  .info-box h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .info-box ul { padding-left: 1.25rem; margin-top: 0.5rem; }
+  .info-box li { margin-bottom: 0.4rem; }
+  
+  /* Qualifications Box: #b8ddfb */
+  .qual-box { background: #b8ddfb; border: 1px solid #93c5fd; color: #0c4a6e; }
+  .qual-box h3 { color: #075985; }
+  
+  /* Expectations Box: #DD5555 */
+  .exp-box { background: #DD5555; border: 1px solid #c84444; color: #ffffff; }
+  .exp-box h3 { color: #ffffff; }
+  
+  /* Additional Benefits Box: #48C76A */
+  .benefits-box { background: #48C76A; border: 1px solid #36b057; color: #0a3818; }
+  .benefits-box h3 { color: #062b12; }
   
   .fine-print { margin-top: 2rem; padding: 1rem; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: var(--text-light); }
   
-  @media (max-width: 550px) {
-    .payout-grid { grid-template-columns: 1fr; }
+  @media (max-width: 650px) {
+    .category-tabs { grid-template-columns: repeat(2, 1fr); }
+    .payout-grid, .stats-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>SLP Compensation & Growth Model</h1>
-    <p>Secure Base Payout + Uncapped Production Multipliers</p>
+    <img src="Logo.svg" alt="Not Your Everyday Therapy Services Logo" class="logo-img" onerror="this.style.display='none'">
+    <p>SLP Compensation and Category Overview</p>
   </header>
 
   <div class="card">
-    <div class="section-title">Step 1: Select Tenure</div>
-    <label for="year">Years of Employment</label>
-    <select id="year" onchange="calculate()">
-      <option value="1">Year 1</option>
-      <option value="2">Year 2</option>
-      <option value="3">Year 3 (Max Matrix)</option>
-    </select>
+    <div class="section-title">Step 1: Select Career Category</div>
+    <div class="category-tabs">
+      <button class="tab-btn active" id="btn-cfy" onclick="setCategory('cfy')">Clinical Fellowship</button>
+      <button class="tab-btn" id="btn-core" onclick="setCategory('core')">Core Clinician</button>
+      <button class="tab-btn" id="btn-specialized" onclick="setCategory('specialized')">Specialized Clinician</button>
+      <button class="tab-btn" id="btn-distinguished" onclick="setCategory('distinguished')">Distinguished Clinician</button>
+    </div>
   </div>
 
   <div class="card">
     <div class="section-title">Step 2: Anticipated Weekly Performance</div>
-    <label for="performance-slider">Weekly Completed Sessions</label>
+    <label for="performance-slider">Weekly Billable Hours</label>
     <div class="slider-container">
-      <input type="range" id="performance-slider" min="0" max="80" value="50" oninput="calculate()">
-      <span class="slider-val" id="slider-display">50 sessions</span>
+      <input type="range" id="performance-slider" min="0" max="50" value="20" oninput="calculate()">
+      <span class="slider-val" id="slider-display">20 hours</span>
     </div>
     
     <div class="stats-grid">
-      <div class="stat-box"><div class="label">Guaranteed Base Salary</div><div class="val">$55,000</div></div>
-      <div class="stat-box"><div class="label">Weekly Bonus Threshold</div><div class="val">25 sessions/wk</div></div>
-      <div class="stat-box"><div class="label">Your Bonus Multiplier</div><div class="val" id="bonus-rate-display">$17.50</div></div>
-      <div class="stat-box"><div class="label">Max Weekly Bonus Cap</div><div class="val">Uncapped</div></div>
+      <div class="stat-box"><div class="label">Guaranteed Base Salary</div><div class="val" id="disp-base">$55,000</div></div>
+      <div class="stat-box"><div class="label">Bonus Threshold Floor</div><div class="val">20 hours/wk</div></div>
+      <div class="stat-box"><div class="label">Commission Rate ($ / Hr)</div><div class="val" id="disp-hourly-rate">$40.00 / hr</div></div>
     </div>
   </div>
 
@@ -79,51 +119,238 @@
     <div class="total-card">
       <div class="label">Estimated Annual Comp</div>
       <div class="grand-total" id="total-compensation">$0</div>
-      <div class="subtext" id="breakdown-text">Base + Bonus</div>
+      <div class="subtext">
+        Base: <span id="sub-annual-base">$0</span> | Comm: <span id="sub-annual-comm">$0</span> | Add'l Benefits & Comp: <span id="sub-annual-perks">$0</span>
+      </div>
     </div>
-    <div class="total-card" style="background: #1e293b;">
+    <div class="total-card">
       <div class="label">Estimated Monthly Comp</div>
       <div class="grand-total" id="monthly-compensation">$0</div>
-      <div class="subtext" id="monthly-breakdown-text">Avg Payout/Mo</div>
+      <div class="subtext">
+        Base: <span id="sub-monthly-base">$0</span> | Comm: <span id="sub-monthly-comm">$0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Compensation Package Box -->
+  <div class="package-card">
+    <div class="label">Total Compensation Package</div>
+    <div class="package-total" id="package-compensation">$0</div>
+    <div class="subtext">Includes Annual W-2 Comp + Direct Perks + Employer Taxes Paid On Your Behalf (FICA/FUTA/SUTA) + Employer Healthcare Contributions</div>
+  </div>
+
+  <!-- Dynamic Content Panels -->
+  <div style="margin-top: 1.5rem;">
+    <div class="info-box qual-box">
+      <h3>Qualifications & Parameters</h3>
+      <div id="content-qual"></div>
+    </div>
+
+    <div class="info-box exp-box">
+      <h3>Expectations & Restrictions</h3>
+      <div id="content-exp"></div>
+    </div>
+
+    <div class="info-box benefits-box">
+      <h3>Additional Benefits & Compensation Package</h3>
+      <div id="content-benefits"></div>
     </div>
   </div>
 
   <div class="fine-print">
-    <p><strong>Note:</strong> Your base salary remains 100% guaranteed, absorbing cancellation variables and tracking your documentation hours safely. Production bonuses are entirely uncapped—the more sessions you complete, the more your income scales.</p>
+    <p><strong>Note:</strong> Pay is distributed monthly on the 11th of each month. Base salary is 100% guaranteed, absorbing cancellation variables. Commission unlocks after the 20 billable hours per week threshold is met. Health care benefit renewal occurs in April of each year.</p>
   </div>
 </div>
 
 <script>
-  // Reworked low-risk scaling rates ($17.50 baseline)
-  const rates = { "1": 17.50, "2": 19.50, "3": 21.50 };
+  var currentCategory = 'cfy';
 
-  function calculate() {
-    const year = document.getElementById("year").value;
-    const volume = parseFloat(document.getElementById("performance-slider").value);
-    const rate = rates[year];
+  var categoryData = {
+    cfy: {
+      base: 55000,
+      hourlyRate: 40.00,
+      benefitsValue: 725, // CPR ($150) + Liability ($120) + OKABA ($150) + OSHA ($150) + OKATA ($155)
+      qualifications: "<ul>" +
+        "<li><strong>Years of Experience:</strong> 0 years in practice (includes CFYs).</li>" +
+        "<li><strong>Tenure with Practice:</strong> 0–1 year.</li>" +
+        "<li><strong>Continuing Education (CEUs):</strong> Meets state/board minimums; focuses on core clinical competencies.</li>" +
+        "<li><strong>Level of Independence:</strong> Requires regular direct observation, case consultation, and clinical oversight.</li>" +
+        "<li><strong>Performance Standard:</strong> Consistently maintaining the baseline 20 billable hours/week average.</li>" +
+        "<li><strong>Pay Frequency:</strong> Once a month on the 11th of each month.</li>" +
+      "</ul>",
+      expectations: "<ul>" +
+        "<li><strong>In-Office Requirement:</strong> 100% On-Site / In-Clinic presence during scheduled client/admin hours.</li>" +
+        "<li><strong>Scheduling:</strong> Fixed, set scheduling template approved by the Clinical Director.</li>" +
+        "<li><strong>Duties:</strong> Primary focus is direct clinical service and documentation; no supervisory or administrative lead duties.</li>" +
+      "</ul>",
+      benefits: "<ul>" +
+        "<li><strong>Base Salary:</strong> $55,000.00 guaranteed annual base.</li>" +
+        "<li><strong>Production Commission:</strong> $40.00 per billable hour over the 20 hour/week minimum threshold.</li>" +
+        "<li><strong>6 Paid Holidays:</strong> Included at your direct billable rate (factored into base salary).</li>" +
+        "<li><strong>Paid Time Off:</strong> 80 hours of PTO provided at the beginning of each year (included within salary).</li>" +
+        "<li><strong>Paid CPR Training:</strong> $150.00 value.</li>" +
+        "<li><strong>Paid Liability Insurance:</strong> $120.00 value.</li>" +
+        "<li><strong>Mileage Reimbursement:</strong> Billed at the Federal Rate (taxed as income per federal laws).</li>" +
+        "<li><strong>Conference Allowances:</strong> OKABA ($150.00), OSHA State ($150.00), OKATA State ($155.00).</li>" +
+        "<li><strong>Healthcare Benefit:</strong> Upon election (Renewal in April of each year).</li>" +
+        "<li><strong>Employer Tax Contributions:</strong> Medicare and Social Security paid on your behalf.</li>" +
+      "</ul>"
+    },
+    core: {
+      base: 60000,
+      hourlyRate: 45.00,
+      benefitsValue: 725, // CPR ($150) + Liability ($120) + OKABA ($150) + OSHA ($150) + OKATA ($155)
+      qualifications: "<ul>" +
+        "<li><strong>Years of Experience:</strong> 0–2 years in practice (includes CCCs for SLPs / First-year clinicians).</li>" +
+        "<li><strong>Years Employed at Not Your Everyday Therapy Services:</strong> 0–1 year.</li>" +
+        "<li><strong>Continuing Education (CEUs):</strong> Meets state/board minimums; focuses on core clinical competencies.</li>" +
+        "<li><strong>Level of Independence:</strong> Requires regular direct observation, case consultation, and clinical oversight.</li>" +
+        "<li><strong>Performance Standard:</strong> Consistently maintaining the baseline 20 billable hours/week average.</li>" +
+        "<li><strong>Pay Frequency:</strong> Once a month on the 11th of each month.</li>" +
+      "</ul>",
+      expectations: "<ul>" +
+        "<li><strong>In-Office Requirement:</strong> 100% On-Site / In-Clinic presence during scheduled client/admin hours (no remote admin/documentation hours).</li>" +
+        "<li><strong>Scheduling:</strong> Fixed, set scheduling template approved by the Clinical Director.</li>" +
+        "<li><strong>Duties:</strong> Primary focus is direct clinical service, parent training, and documentation; no supervisory or administrative lead duties.</li>" +
+      "</ul>",
+      benefits: "<ul>" +
+        "<li><strong>Base Salary:</strong> $60,000.00 guaranteed annual base.</li>" +
+        "<li><strong>Production Commission:</strong> $45.00 per billable hour over the 20 hour/week minimum threshold.</li>" +
+        "<li><strong>6 Paid Holidays:</strong> Included at your direct billable rate (factored into base salary).</li>" +
+        "<li><strong>Paid Time Off:</strong> 80 hours of PTO provided at the beginning of each year (included within salary).</li>" +
+        "<li><strong>Paid CPR Training:</strong> $150.00 value.</li>" +
+        "<li><strong>Paid Liability Insurance:</strong> $120.00 value.</li>" +
+        "<li><strong>Mileage Reimbursement:</strong> Billed at the Federal Rate (taxed as income per federal laws).</li>" +
+        "<li><strong>Conference Allowances:</strong> OKABA ($150.00), OSHA State ($150.00), OKATA State ($155.00).</li>" +
+        "<li><strong>Healthcare Benefit:</strong> Upon election (Renewal in April of each year).</li>" +
+        "<li><strong>Employer Tax Contributions:</strong> Medicare and Social Security paid on your behalf.</li>" +
+      "</ul>"
+    },
+    specialized: {
+      base: 64000,
+      hourlyRate: 48.00,
+      benefitsValue: 890, // National ($215) + State ($100) + Liability ($120) + OKABA ($150) + OSHA ($150) + OKATA ($155)
+      qualifications: "<ul>" +
+        "<li><strong>Years of Experience:</strong> 2–5 years of active clinical practice.</li>" +
+        "<li><strong>Years Employed at Not Your Everyday Therapy Services:</strong> Minimum 1 year with the practice (or equivalent demonstrated high performance).</li>" +
+        "<li><strong>Continuing Education (CEUs):</strong> Exceeds minimums; holds at least 1 specialty certification or advanced training (e.g., PECS, PROMPT, NLA/Gestalt for SLPs).</li>" +
+        "<li><strong>Level of Independence:</strong> Fully independent in caseload management, treatment planning, and routine client communication.</li>" +
+        "<li><strong>Performance Standard:</strong> Meets or exceeds baseline billables and demonstrates high documentation timeliness.</li>" +
+        "<li><strong>Pay Frequency:</strong> Once a month on the 11th of each month.</li>" +
+      "</ul>",
+      expectations: "<ul>" +
+        "<li><strong>Scheduling Flexibility:</strong> Option for hybrid service time (up to 4–6 hours/week of documentation/treatment planning completed off-site/remotely). Flexible start/end time windows, provided client care hours are covered.</li>" +
+        "<li><strong>In-Office Requirement:</strong> 75% On-Site (In-clinic for all direct client hours; flexibility on admin/prep time).</li>" +
+        "<li><strong>Duties:</strong> May assist with onboarding Tier 1 clinicians or peer review of documentation.</li>" +
+      "</ul>",
+      benefits: "<ul>" +
+        "<li><strong>Base Salary:</strong> $64,000.00 guaranteed annual base.</li>" +
+        "<li><strong>Production Commission:</strong> $48.00 per billable hour over the 20 hour/week minimum threshold.</li>" +
+        "<li><strong>6 Paid Holidays:</strong> Included at your direct billable rate (factored into base salary).</li>" +
+        "<li><strong>Paid Time Off:</strong> 100 hours of PTO provided at the beginning of each year (included within salary).</li>" +
+        "<li><strong>Paid National License:</strong> $215.00 covered by company.</li>" +
+        "<li><strong>Paid State License:</strong> $100.00 covered by company.</li>" +
+        "<li><strong>Paid Liability Insurance:</strong> $120.00 value.</li>" +
+        "<li><strong>Mileage Reimbursement:</strong> Billed at the Federal Rate (taxed as income per federal laws).</li>" +
+        "<li><strong>Conference Allowances:</strong> OKABA ($150.00), OSHA State ($150.00), OKATA State ($155.00).</li>" +
+        "<li><strong>Healthcare Benefit:</strong> Upon election (Renewal in April of each year).</li>" +
+        "<li><strong>Employer Tax Contributions:</strong> Medicare and Social Security paid on your behalf.</li>" +
+      "</ul>"
+    },
+    distinguished: {
+      base: 68000,
+      hourlyRate: 52.00,
+      benefitsValue: 1190, // National ($215) + State ($100) + Liability ($120) + CEU Stipend ($300) + OKABA ($150) + OSHA ($150) + OKATA ($155)
+      qualifications: "<ul>" +
+        "<li><strong>Years of Experience:</strong> 5+ years of active clinical practice.</li>" +
+        "<li><strong>Years Employed at Not Your Everyday Therapy Services:</strong> Minimum 2+ years with the practice.</li>" +
+        "<li><strong>Continuing Education (CEUs):</strong> Advanced expert training, active presenter at conferences, or maintains 2+ specialty certifications.</li>" +
+        "<li><strong>Level of Independence:</strong> Complete autonomy; serves as a clinical resource/subject matter expert for the rest of the team.</li>" +
+        "<li><strong>Performance Standard:</strong> Consistently meets billing targets while actively mentoring junior staff and maintaining exemplary audit scores.</li>" +
+        "<li><strong>Pay Frequency:</strong> Once a month on the 11th of each month.</li>" +
+      "</ul>",
+      expectations: "<ul>" +
+        "<li><strong>Full Schedule Autonomy:</strong> Ability to set their own weekly patient schedule, provided client/family needs and billable targets are met.</li>" +
+        "<li><strong>Hybrid Admin & Telehealth:</strong> Maximum remote flexibility for non-direct hours, parent guidance, or eligible telehealth sessions.</li>" +
+        "<li><strong>Priority Benefits:</strong> First choice for holiday/vacation time off requests.</li>" +
+        "<li><strong>In-Office Requirement:</strong> Flexible based on patient schedule, but required on-site for designated mentorship and team meetings.</li>" +
+        "<li><strong>Leadership Expectations:</strong> Must provide dedicated mentorship to Tier 1 clinicians, lead monthly clinical roundtables, or assist with clinical quality audits.</li>" +
+      "</ul>",
+      benefits: "<ul>" +
+        "<li><strong>Base Salary:</strong> $68,000.00 guaranteed annual base.</li>" +
+        "<li><strong>Production Commission:</strong> $52.00 per billable hour over the 20 hour/week minimum threshold.</li>" +
+        "<li><strong>6 Paid Holidays:</strong> Included at your direct billable rate (factored into base salary).</li>" +
+        "<li><strong>3 Paid CEU Days:</strong> Included at your direct billable rate (factored into base salary).</li>" +
+        "<li><strong>Paid Time Off:</strong> 120 hours of PTO provided at the beginning of each year (included within salary).</li>" +
+        "<li><strong>Annual CEU Allowance:</strong> $300.00 stipend per year.</li>" +
+        "<li><strong>Paid National License:</strong> $215.00 covered by company.</li>" +
+        "<li><strong>Paid State License:</strong> $100.00 covered by company.</li>" +
+        "<li><strong>Paid Liability Insurance:</strong> $120.00 value.</li>" +
+        "<li><strong>Mileage Reimbursement:</strong> Billed at the Federal Rate (taxed as income per federal laws).</li>" +
+        "<li><strong>Conference Allowances:</strong> OKABA ($150.00), OSHA State ($150.00), OKATA State ($155.00).</li>" +
+        "<li><strong>Healthcare Benefit:</strong> Upon election (Renewal in April of each year).</li>" +
+        "<li><strong>Employer Tax Contributions:</strong> Medicare and Social Security paid on your behalf.</li>" +
+      "</ul>"
+    }
+  };
+
+  function setCategory(cat) {
+    currentCategory = cat;
     
-    document.getElementById("slider-display").textContent = volume + " sessions";
-    document.getElementById("bonus-rate-display").textContent = "$" + rate.toFixed(2) + " / session";
+    document.getElementById('btn-cfy').classList.remove('active');
+    document.getElementById('btn-core').classList.remove('active');
+    document.getElementById('btn-specialized').classList.remove('active');
+    document.getElementById('btn-distinguished').classList.remove('active');
+    document.getElementById('btn-' + cat).classList.add('active');
     
-    // Safety cap removed completely from logic
-    let bonusUnits = volume - 25;
-    if (bonusUnits < 0) bonusUnits = 0;
+    var data = categoryData[cat];
+    document.getElementById('content-qual').innerHTML = data.qualifications;
+    document.getElementById('content-exp').innerHTML = data.expectations;
+    document.getElementById('content-benefits').innerHTML = data.benefits;
     
-    const annualBonus = bonusUnits * rate * 48;
-    const totalAnnual = 55000 + annualBonus;
-    
-    const totalMonthly = totalAnnual / 12;
-    const baseMonthly = 55000 / 12;
-    const bonusMonthly = annualBonus / 12;
-    
-    document.getElementById("total-compensation").textContent = "$" + Math.round(totalAnnual).toLocaleString();
-    document.getElementById("breakdown-text").textContent = "Base: $55,000 | Bonus: $" + Math.round(annualBonus).toLocaleString();
-    
-    document.getElementById("monthly-compensation").textContent = "$" + Math.round(totalMonthly).toLocaleString();
-    document.getElementById("monthly-breakdown-text").textContent = "Base: $" + Math.round(baseMonthly).toLocaleString() + " | Bonus: $" + Math.round(bonusMonthly).toLocaleString();
+    calculate();
   }
 
-  calculate();
+  function calculate() {
+    var data = categoryData[currentCategory];
+    var weeklyHours = parseFloat(document.getElementById("performance-slider").value) || 0;
+    
+    document.getElementById("slider-display").textContent = weeklyHours + " hours";
+    document.getElementById("disp-base").textContent = "$" + data.base.toLocaleString();
+    document.getElementById("disp-hourly-rate").textContent = "$" + data.hourlyRate.toFixed(2) + " / hr";
+    
+    // Commission unlocks after 20 billable hours/week
+    var bonusHours = weeklyHours - 20;
+    if (bonusHours < 0) { bonusHours = 0; }
+    
+    var annualCommission = bonusHours * data.hourlyRate * 48; // 48 active production weeks
+    var totalAnnualComp = data.base + annualCommission + data.benefitsValue;
+    
+    var baseMonthly = data.base / 12;
+    var commissionMonthly = annualCommission / 12;
+    var totalMonthlyComp = baseMonthly + commissionMonthly;
+    
+    // Employer cost package: Gross earnings + 10% taxes + $1,800 healthcare
+    var employerTaxesAndBenefits = ((data.base + annualCommission) * 0.10) + 1800;
+    var grandTotalPackage = totalAnnualComp + employerTaxesAndBenefits;
+
+    document.getElementById("total-compensation").textContent = "$" + Math.round(totalAnnualComp).toLocaleString();
+    document.getElementById("monthly-compensation").textContent = "$" + Math.round(totalMonthlyComp).toLocaleString();
+    document.getElementById("package-compensation").textContent = "$" + Math.round(grandTotalPackage).toLocaleString();
+
+    // Updating subtext spans cleanly
+    document.getElementById("sub-annual-base").textContent = "$" + data.base.toLocaleString();
+    document.getElementById("sub-annual-comm").textContent = "$" + Math.round(annualCommission).toLocaleString();
+    document.getElementById("sub-annual-perks").textContent = "$" + Math.round(data.benefitsValue).toLocaleString();
+
+    document.getElementById("sub-monthly-base").textContent = "$" + Math.round(baseMonthly).toLocaleString();
+    document.getElementById("sub-monthly-comm").textContent = "$" + Math.round(commissionMonthly).toLocaleString();
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    setCategory('cfy');
+  });
 </script>
 </body>
+</html>
 </html>
